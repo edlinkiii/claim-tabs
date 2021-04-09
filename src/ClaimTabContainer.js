@@ -11,6 +11,8 @@ class ClaimTabContainer extends HTMLElement {
   
   connectedCallback() {
     this.render();
+
+    this.listen();
   }
 
   render() {
@@ -19,8 +21,6 @@ class ClaimTabContainer extends HTMLElement {
     if(!this.querySelector("claim-tab[is-active='true']") && this.querySelectorAll("claim-tab").length > 0) {
       this.querySelectorAll("claim-tab")[0].isActive = true;
     }
-
-    this.listen();
   }
 
   template({ claims }) {
@@ -35,6 +35,44 @@ class ClaimTabContainer extends HTMLElement {
           display: flex;
           box-sizing: border-box;
           padding: 2px;
+        }
+        claim-tab {
+          float: left;
+          padding: ${STYLES.TAB_PADDING}px;
+          height: ${STYLES.TAB_HEIGHT}px;
+          background-color: #123b62;
+          border-radius: 5px;
+          min-width: ${STYLES.TAB_MIN_WIDTH}px;
+          max-width: ${STYLES.TAB_MAX_WIDTH}px;
+          margin: ${STYLES.TAB_MARGIN}px;
+          display: block;
+          box-sizing: border-box;
+        }
+        claim-tab a.claim-link {
+          color: white;
+          line-height: 24px;
+          padding-right: 2px;
+          white-space: nowrap;
+          overflow: hidden;
+          display: block;
+          text-decoration: none;
+          font-size: 85%;
+          font-family: 'Open Sans Regular', Arial, Helvetica, sans-serif;
+        }
+        claim-tab a.close-claim {
+          float: right;
+          margin-top: -6px;
+          margin-right: -6px;
+          cursor: pointer;
+          color: #fff;
+          border: 1px solid #AEAEAE;
+          border-radius: 30px;
+          background: #7a3030;
+          font-size: 12px;
+          font-weight: bold;
+          line-height: 0px;
+          padding: 5px 2.5px 7px 2.5px;
+          z-index: 888;
         }
       </style>
     `;
@@ -89,16 +127,16 @@ class ClaimTabContainer extends HTMLElement {
   }
 
   listen() {
-    this.shadowRoot.querySelectorAll("claim-tab").forEach((tab) => {
-      tab.shadowRoot.querySelector("a.claim-link").addEventListener("click", (e) => {
-        e.preventDefault();
-        this.selectClaimTab(tab);
-      });
-
-      tab.shadowRoot.querySelector("a.close-claim").addEventListener("click", (e) => {
-        e.preventDefault();
-        this.removeClaimTab(tab);
-      });
+    this.shadowRoot.addEventListener("click", (e) => {
+      e.preventDefault();
+      if(e.target.nodeName === "A") {
+        if(e.target.classList.contains("claim-link")) {
+          this.selectClaimTab(e.target.parentNode);
+        }
+        else if(e.target.classList.contains("close-claim")) {
+          this.removeClaimTab(e.target.parentNode);
+        }
+      }
     });
   }
 }
