@@ -1,4 +1,5 @@
 import {STYLES} from "./constants.js";
+import {demo} from "./demo.js";
 
 class ClaimTabContainer extends HTMLElement {
   constructor() {
@@ -13,13 +14,16 @@ class ClaimTabContainer extends HTMLElement {
     this.render();
 
     this.listen();
+
+    // a demo to show what it can do...
+    demo();
   }
 
   render() {
     this.shadowRoot.innerHTML = this.template(this);
 
-    if(!this.querySelector("claim-tab[is-active='true']") && this.querySelectorAll("claim-tab").length > 0) {
-      this.querySelectorAll("claim-tab")[0].isActive = true;
+    if(!this.shadowRoot.querySelector("claim-tab[is-active='true']") && this.shadowRoot.querySelectorAll("claim-tab").length > 0) {
+      this.shadowRoot.querySelectorAll("claim-tab")[0].isActive = true;
     }
   }
 
